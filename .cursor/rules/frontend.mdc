@@ -1,0 +1,42 @@
+# Frontend - Règles et conventions
+
+## Structure des composants
+
+```
+/components/ui/        → shadcn/ui
+/components/auth/     → Composants d'authentification
+/components/chat/     → UI métier chat
+/components/layout/   → Layout app
+/components/profile/ → Composants profil
+/components/settings/ → Composants paramètres
+```
+
+## Pages
+
+- `/login` - Page de connexion
+- `/signup` - Page d'inscription
+- `/verify-email` - Page de vérification email
+- `/app` - Page principale chat (protégée)
+- `/app/profile` - Page de profil (protégée)
+- `/app/settings` - Page de paramètres (protégée)
+
+## UI/UX
+
+- Interface moderne et épurée
+- Mode sombre/clair (optionnel mais recommandé)
+- Responsive design (mobile, tablette, desktop)
+- Animations subtiles pour les interactions
+- Accessibilité : Support du clavier, contraste, labels ARIA, lecteurs d'écran
+
+## Streaming
+
+- Utiliser fetch streaming ou SSE pour les réponses LLM
+- Indicateur de frappe (typing indicator)
+- Affichage markdown des réponses
+- Possibilité de copier les réponses
+
+## Validation des formulaires
+
+- Validation côté client avec feedback immédiat
+- Validation côté serveur obligatoire
+- Messages d'erreur clairs et accessibles

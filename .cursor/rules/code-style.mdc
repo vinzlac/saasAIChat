@@ -1,0 +1,47 @@
+# Style de code - Conventions
+
+## TypeScript
+
+- TypeScript strict activé
+- Types explicites pour toutes les fonctions publiques
+- Éviter `any`, utiliser `unknown` si nécessaire
+- Interfaces pour les types de données
+
+## Imports
+
+- Imports organisés : externes → internes
+- Utiliser les alias `@/` pour les imports internes
+- Imports absolus préférés aux relatifs
+
+## Nommage
+
+- Composants : PascalCase (`UserProfile.tsx`)
+- Fichiers : kebab-case pour routes, camelCase pour utilitaires
+- Variables/fonctions : camelCase
+- Constantes : UPPER_SNAKE_CASE
+- Types/Interfaces : PascalCase avec préfixe si nécessaire (`UserProfile`, `ApiResponse`)
+
+## Structure des fichiers
+
+- Un composant par fichier
+- Exports nommés préférés aux exports par défaut
+- Organisation logique : imports → types → composant → exports
+
+## Commentaires
+
+- Commenter la logique complexe
+- JSDoc pour les fonctions publiques
+- Éviter les commentaires redondants
+
+## Gestion d'erreurs
+
+- Try/catch pour les opérations async
+- Messages d'erreur explicites
+- Logging approprié (pas de logs sensibles en production)
+
+## Performance
+
+- Lazy loading des composants lourds
+- Mise en cache des données statiques
+- Optimisation des requêtes DB
+- Éviter les re-renders inutiles

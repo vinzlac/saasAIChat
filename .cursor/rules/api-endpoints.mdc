@@ -1,0 +1,40 @@
+# API Endpoints - Structure et conventions
+
+## Authentification
+
+- `POST /api/auth/signup` - Création de compte (redirige vers `/verify-email`)
+- `POST /api/auth/login` - Connexion
+- `POST /api/auth/logout` - Déconnexion
+- `POST /api/auth/resend` - Renvoyer l'email de confirmation (réponse générique anti-énumération)
+- `GET /api/auth/me` - Récupération de l'utilisateur connecté
+- `GET /auth/confirm` - Confirmation d'email (lien depuis email, auto-login + redirection vers `/app`)
+
+## Profil utilisateur
+
+- `GET /api/user/profile` - Récupération du profil
+- `PUT /api/user/profile` - Mise à jour du profil
+- `POST /api/user/profile/picture` - Upload de la photo de profil
+- `DELETE /api/user/profile/picture` - Suppression de la photo
+
+## Chat
+
+- `POST /api/messages` - Création d'un message utilisateur
+- `POST /api/chat` - Envoi d'un message au LLM (streaming)
+- `GET /api/conversations` - Liste des conversations
+- `POST /api/conversations` - Création d'une conversation
+- `GET /api/messages?conversation_id=...` - Récupération des messages d'une conversation
+
+## OAuth Google Calendar
+
+- `GET /api/oauth/google/authorize` - Initiation du flux OAuth
+- `GET /api/oauth/google/callback` - Callback OAuth
+- `GET /api/oauth/google/status` - Statut de la connexion
+- `DELETE /api/oauth/google/disconnect` - Déconnexion
+
+## Conventions
+
+- Tous les endpoints API sont dans `src/app/api/`
+- Utiliser les Route Handlers de Next.js (route.ts)
+- Validation des inputs avec Zod ou similaire
+- Gestion d'erreurs centralisée
+- Réponses JSON standardisées

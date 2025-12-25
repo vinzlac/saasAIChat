@@ -1,0 +1,51 @@
+# Déploiement - Règles Vercel
+
+## Environnements
+
+- **Local** : Développement + preview
+- **Production** : Utilisateurs réels (Vercel uniquement)
+- ❌ Pas d'environnement "preview" Vercel
+- ❌ Pas de GitHub Actions
+- ✅ Local = preview unique
+
+## Variables d'environnement
+
+**Local (.env.local)**
+```
+DATABASE_URL=postgresql://postgres:postgres@localhost:54322/postgres
+SUPABASE_URL=http://localhost:54321
+SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+MISTRAL_API_KEY=...
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+ENCRYPTION_KEY=...
+```
+
+**Production (Vercel)**
+```
+DATABASE_URL=postgresql://postgres:***@db.<project>.supabase.co:5432/postgres
+SUPABASE_URL=https://<project>.supabase.co
+SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+MISTRAL_API_KEY=...
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+ENCRYPTION_KEY=...
+VERCEL_ENV=production
+```
+
+❌ Aucune variable `NEXT_PUBLIC_*`
+
+## Migrations production
+
+- Script `db:migrate` dans package.json
+- PostgreSQL advisory lock
+- Exécution uniquement si `VERCEL_ENV=production`
+- Migrations pendant le build Vercel
+
+## Build
+
+- Build automatique sur push vers main
+- Tests avant déploiement (si configurés)
+- Vérification des migrations

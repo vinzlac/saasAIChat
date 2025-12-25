@@ -1,0 +1,36 @@
+# Sécurité - Règles non négociables
+
+## Row Level Security (RLS)
+
+- RLS OBLIGATOIRE sur toutes les tables
+- Politiques de lecture : user peut lire ses propres données uniquement
+- Politiques d'écriture :
+  - User peut écrire uniquement `role='user'`
+  - User ne peut JAMAIS écrire `role='assistant'`
+  - Backend (service role/RPC) peut écrire `role='assistant'`
+
+## Authentification
+
+- Confirmation email OBLIGATOIRE avant création de session
+- Aucune session créée tant que l'email n'est pas confirmé
+- Redirection vers `/verify-email` après inscription
+- Auto-login après confirmation d'email
+
+## Tokens OAuth
+
+- Chiffrement des tokens stockés en base de données
+- Refresh automatique des tokens expirés
+- Révocation des tokens en cas de déconnexion
+- Stockage sécurisé des credentials OAuth (variables d'environnement)
+
+## Validation
+
+- Validation et sanitization de tous les inputs
+- Protection contre les injections SQL/NoSQL
+- HTTPS obligatoire en production
+- CORS configuré correctement
+
+## Rate Limiting
+
+- 60 requêtes/heure global sur les endpoints chat
+- Rate limiting sur les endpoints d'authentification

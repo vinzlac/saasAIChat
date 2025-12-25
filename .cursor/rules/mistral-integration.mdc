@@ -1,0 +1,39 @@
+# Intégration Mistral - Règles et conventions
+
+## Configuration
+
+- Modèle : `mistral-small-latest`
+- Backend-only : Aucun appel IA côté client
+- Streaming : Réponses LLM en streaming (SSE ou fetch streaming)
+- Rate limiting : 60 requêtes/heure global
+
+## Flow standard du chat
+
+1. User écrit un message
+2. Frontend → `POST /api/messages` (crée le message utilisateur en DB)
+3. Frontend → `POST /api/chat` (envoie au LLM)
+4. Backend :
+   - Vérifie accès conversation
+   - Lit l'historique
+   - Appelle le LLM (Mistral)
+   - Stream la réponse
+   - Écrit le message assistant en DB (via service role)
+5. Frontend affiche la réponse en streaming
+
+## Function Calling
+
+**Fonctions définies :**
+- `get_today_events()` : Événements d'aujourd'hui
+- `get_calendar_events(date, timeMin?, timeMax?)` : Événements pour une période
+- `get_upcoming_events(days)` : Prochains événements
+
+**Format des réponses :**
+- Texte naturel généré par le LLM à partir des données du calendrier
+- Gestion des erreurs API Google (token expiré, permissions insuffisantes, etc.)
+
+## Gestion des erreurs
+
+- Retry logic pour API Mistral
+- Gestion des timeouts
+- Fallback en cas d'erreur
+- Messages d'erreur utilisateur clairs

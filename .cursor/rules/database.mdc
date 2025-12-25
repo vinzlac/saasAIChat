@@ -1,0 +1,60 @@
+# Base de données - Règles Drizzle & Supabase
+
+## Structure des tables
+
+**conversations**
+- id: uuid (PK)
+- created_by: uuid (FK -> auth.users)
+- title: text
+- created_at: timestamp
+
+**messages**
+- id: uuid (PK)
+- conversation_id: uuid (FK -> conversations)
+- role: enum ('user', 'assistant')
+- content: text
+- created_by: uuid / NULL (FK -> auth.users, NULL pour assistant)
+- created_at: timestamp
+
+**profiles**
+- id: uuid (PK)
+- user_id: uuid (FK -> auth.users, UNIQUE)
+- first_name: text
+- last_name: text
+- description: text (max 500 caractères)
+- profile_picture_url: text (nullable)
+- hobbies: text[] (max 10)
+- created_at: timestamp
+- updated_at: timestamp
+
+**oauth_connections**
+- id: uuid (PK)
+- user_id: uuid (FK -> auth.users)
+- provider: string (e.g., "google_calendar")
+- access_token: text (encrypted)
+- refresh_token: text (encrypted, nullable)
+- token_expires_at: timestamp (nullable)
+- scopes: text[]
+- created_at: timestamp
+- updated_at: timestamp
+
+## Migrations
+
+- Drizzle ORM avec migrations SQL versionnées
+- Migrations automatiques en production uniquement (VERCEL_ENV=production)
+- PostgreSQL advisory lock pour éviter les migrations concurrentes
+- Migrations additives recommandées
+- Une migration à la fois
+
+## Environnements
+
+**Local**
+- Supabase CLI (`supabase start`)
+- PostgreSQL Docker
+- `DATABASE_URL` → DB locale
+
+**Production**
+- Supabase Cloud
+- `DATABASE_URL` → DB production
+
+Chaque environnement possède sa base dédiée.

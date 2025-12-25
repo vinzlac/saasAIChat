@@ -1,0 +1,44 @@
+# Architecture - Règles fondamentales
+
+## Supabase masqué à 100%
+
+- ❌ JAMAIS de variable `NEXT_PUBLIC_*` exposant Supabase
+- ❌ JAMAIS de `SUPABASE_URL` côté client
+- ❌ JAMAIS de `ANON_KEY` côté client
+- ❌ JAMAIS de SDK Supabase dans le navigateur
+- ✅ Frontend → API Next.js uniquement
+- ✅ Backend → Supabase uniquement
+- ✅ Toutes les interactions DB passent par l'API Next.js
+
+## Auth & Impersonation
+
+- Supabase Auth = IAM officiel
+- Sessions stockées en cookies httpOnly
+- Le backend lit le JWT depuis les cookies
+- Le backend appelle Supabase en impersonation
+- RLS s'applique comme si l'utilisateur appelait directement la DB
+
+## Service Role (usage strict)
+
+Utilisée UNIQUEMENT pour :
+- Écrire les messages assistant
+- Jobs système
+- Webhooks
+- Opérations admin
+
+❌ JAMAIS pour le CRUD utilisateur standard
+
+## Rendering & Components
+
+**Server Components (SSR)**
+- Landing page
+- Pages auth
+- Layout app
+- Protection des routes (`/app`)
+
+**Client Components**
+- UI du chat
+- Formulaires interactifs
+- Streaming des réponses
+
+UI = affichage uniquement. Aucune logique métier dans les composants.

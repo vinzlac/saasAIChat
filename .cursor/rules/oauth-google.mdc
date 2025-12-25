@@ -1,0 +1,37 @@
+# OAuth Google Calendar - Règles et conventions
+
+## Flux OAuth 2.0
+
+1. User clique "Connecter Google Calendar"
+2. Frontend → `GET /api/oauth/google/authorize`
+3. Backend → Redirection vers Google avec Client ID
+4. Google → Page d'autorisation
+5. User autorise l'application
+6. Google → Callback avec code d'autorisation
+7. Backend → Échange code contre tokens
+8. Backend → Stocke tokens (chiffrés)
+9. Frontend → Affiche "Connecté"
+
+## Scopes requis
+
+- `https://www.googleapis.com/auth/calendar.readonly` (au minimum)
+
+## Stockage des tokens
+
+- Chiffrement des tokens stockés en base de données
+- Refresh automatique des tokens expirés
+- Révocation des tokens en cas de déconnexion
+- Stockage sécurisé des credentials OAuth (variables d'environnement)
+
+## Gestion des erreurs
+
+- Token expiré : Refresh automatique
+- Permissions insuffisantes : Notification utilisateur
+- Erreurs API Google : Gestion et retry si approprié
+
+## Function Calling avec Google Calendar
+
+Les fonctions Google Calendar sont appelées automatiquement par le LLM selon la requête de l'utilisateur :
+- "Quels sont mes rendez-vous prévus aujourd'hui ?" → `get_today_events()`
+- "Qu'est-ce que j'ai de prévu cette semaine ?" → `get_upcoming_events(7)`
+- "Quel est mon prochain rendez-vous ?" → `get_upcoming_events(30)`
