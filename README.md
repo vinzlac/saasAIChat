@@ -41,43 +41,42 @@ cd saasAIChat
 # Installer les dépendances
 npm install
 
-# Démarrer Supabase local
-npx supabase start
-
-# Copier le fichier d'environnement
-cp .env.local.example .env.local
-
-# Remplir les variables d'environnement dans .env.local
-# Voir la section Variables d'environnement
-
-# Appliquer les migrations
-npm run db:migrate
+# Setup local : démarre Supabase, valorise .env.local, applique les migrations
+npm run setup:local
 
 # Démarrer le serveur de développement
 npm run dev
 ```
 
+Le script `setup:local` démarre Supabase (Docker requis), extrait les clés via `supabase status -o env`, met à jour `.env.local` et applique les migrations Drizzle.
+
+**Variables à renseigner manuellement** après le setup (dans `.env.local`) :
+- `MISTRAL_API_KEY` : [console.mistral.ai](https://console.mistral.ai/) (requis pour le chat)
+- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` : Google Cloud Console (optionnel, pour Google Calendar et login social Google)
+
+**Configuration sans console Supabase** : tout se fait via `supabase/config.toml` et `.env.local`. Le login Google est déjà configuré dans `config.toml` ; il suffit d’ajouter vos credentials Google dans `.env.local`. Pensez à ajouter `http://127.0.0.1:54321/auth/v1/callback` dans les URI de redirection de votre projet Google Cloud.
+
 ## 🔐 Variables d'environnement
 
-Créer un fichier `.env.local` avec les variables suivantes :
+Le fichier `.env.local` est créé/mis à jour par `npm run setup:local`. Variables principales :
 
 ```env
-# Database
+# Database (auto-rempli par setup:local)
 DATABASE_URL=postgresql://postgres:postgres@localhost:54322/postgres
 
-# Supabase (local)
+# Supabase (auto-rempli par setup:local)
 SUPABASE_URL=http://localhost:54321
-SUPABASE_ANON_KEY=<your-anon-key>
-SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
+SUPABASE_ANON_KEY=<from supabase status>
+SUPABASE_SERVICE_ROLE_KEY=<from supabase status>
 
-# Mistral
+# Mistral (manuel - https://console.mistral.ai/)
 MISTRAL_API_KEY=<your-mistral-api-key>
 
-# Google OAuth
+# Google OAuth (optionnel - Google Cloud Console)
 GOOGLE_CLIENT_ID=<your-google-client-id>
 GOOGLE_CLIENT_SECRET=<your-google-client-secret>
 
-# Encryption (pour tokens OAuth)
+# Encryption (auto-généré par setup:local)
 ENCRYPTION_KEY=<32-character-encryption-key>
 ```
 
@@ -367,8 +366,18 @@ saasAIChat/
 ### Production (Vercel)
 
 1. Connecter le repository à Vercel
-2. Configurer les variables d'environnement dans Vercel
+2. Configurer les variables d'environnement dans Vercel (voir ci-dessous)
 3. Les migrations s'exécutent automatiquement pendant le build (si `VERCEL_ENV=production`)
+
+**Variables d'environnement production :**
+- `DATABASE_URL` - URL PostgreSQL (Supabase)
+- `SUPABASE_URL` - URL du projet Supabase
+- `SUPABASE_ANON_KEY` - Clé anonyme Supabase
+- `SUPABASE_SERVICE_ROLE_KEY` - Clé service role Supabase
+- `MISTRAL_API_KEY` - Clé API Mistral
+- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` - OAuth Google
+- `ENCRYPTION_KEY` - Clé de chiffrement (32 caractères min) pour tokens OAuth
+- `APP_URL` - URL publique de l'app (ex: `https://votre-app.vercel.app`) pour redirections OAuth et emails
 
 ### Migrations
 
@@ -387,8 +396,10 @@ npm run db:migrate
 - `POST /api/auth/login` - Connexion
 - `POST /api/auth/logout` - Déconnexion
 - `POST /api/auth/resend` - Renvoyer email confirmation
+- `POST /api/auth/forgot-password` - Demande réinitialisation mot de passe
+- `POST /api/auth/reset-password` - Nouveau mot de passe (session recovery)
 - `GET /api/auth/me` - Utilisateur connecté
-- `GET /auth/confirm` - Confirmation email
+- `GET /auth/confirm` - Confirmation email / récupération mot de passe
 
 ### Profil
 - `GET /api/user/profile` - Récupération profil
@@ -412,14 +423,14 @@ npm run db:migrate
 ## 🧪 Développement
 
 ```bash
-# Démarrer Supabase local
-npx supabase start
+# Setup complet (Supabase + .env.local + migrations)
+npm run setup:local
 
-# Générer les types Drizzle
-npm run db:generate
-
-# Appliquer les migrations
-npm run db:migrate
+# Ou manuellement :
+npm run supabase:start   # Démarrer Supabase
+npm run supabase:stop   # Arrêter Supabase
+npm run db:migrate      # Appliquer les migrations
+npm run db:generate     # Générer les types Drizzle
 
 # Démarrer le serveur de développement
 npm run dev
