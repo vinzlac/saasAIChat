@@ -73,5 +73,6 @@ export const config = {
     "/verify-email",
     "/forgot-password",
     "/reset-password",
+    "/auth/callback", // OAuth callback - doit passer par le middleware pour les cookies
   ],
 };

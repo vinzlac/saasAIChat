@@ -119,12 +119,11 @@ export function LoginForm() {
               setOauthLoading(true);
               try {
                 const supabase = createClient();
-                const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin;
+                // Toujours utiliser l'origine actuelle pour que les cookies PKCE soient sur le même domaine
+                const redirectTo = `${window.location.origin}/auth/callback?next=/app`;
                 const { data, error } = await supabase.auth.signInWithOAuth({
                   provider: "google",
-                  options: {
-                    redirectTo: `${baseUrl}/auth/callback?next=/app`,
-                  },
+                  options: { redirectTo },
                 });
                 if (error) {
                   setError(error.message);
