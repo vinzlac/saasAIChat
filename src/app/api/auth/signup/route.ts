@@ -10,6 +10,8 @@ const signupSchema = z.object({
   password: z.string().min(8, "Mot de passe minimum 8 caractères"),
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

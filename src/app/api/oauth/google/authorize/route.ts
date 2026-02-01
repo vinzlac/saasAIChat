@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getAuthorizeUrl } from "@/lib/oauth/google";
 import { randomBytes } from "crypto";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();

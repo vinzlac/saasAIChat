@@ -4,6 +4,8 @@ import { db } from "@/db";
 import { conversations } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 
+export const dynamic = "force-dynamic";
+
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

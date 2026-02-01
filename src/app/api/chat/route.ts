@@ -16,6 +16,8 @@ const postSchema = z.object({
   conversation_id: z.string().uuid(),
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();

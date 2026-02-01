@@ -10,6 +10,8 @@ const postSchema = z.object({
   content: z.string().min(1).max(10000),
 });
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();

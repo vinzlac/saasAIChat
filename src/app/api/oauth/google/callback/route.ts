@@ -8,6 +8,8 @@ import { encrypt } from "@/lib/encryption";
 
 const PROVIDER = "google_calendar";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");

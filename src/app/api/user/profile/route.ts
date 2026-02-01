@@ -10,6 +10,8 @@ const updateProfileSchema = z.object({
   hobbies: z.array(z.string()).max(10).optional(),
 });
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const supabase = await createClient();

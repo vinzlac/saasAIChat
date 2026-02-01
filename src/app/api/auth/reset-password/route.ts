@@ -6,6 +6,8 @@ const schema = z.object({
   password: z.string().min(8, "Minimum 8 caractères"),
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();

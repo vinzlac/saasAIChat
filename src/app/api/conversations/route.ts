@@ -4,6 +4,8 @@ import { db } from "@/db";
 import { conversations } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const supabase = await createClient();
