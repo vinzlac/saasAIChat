@@ -372,14 +372,15 @@ saasAIChat/
 3. Les migrations s'exécutent automatiquement pendant le build (si `VERCEL_ENV=production`)
 
 **Variables d'environnement production :**
-- `DATABASE_URL` - URL PostgreSQL (Supabase)
-- `SUPABASE_URL` - URL du projet Supabase
-- `SUPABASE_ANON_KEY` - Clé anonyme Supabase
+- `DATABASE_URL` - URL PostgreSQL pooler Supabase (port 6543)
+- `SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_URL` - URL du projet Supabase
+- `SUPABASE_ANON_KEY` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Clé anonyme Supabase
 - `SUPABASE_SERVICE_ROLE_KEY` - Clé service role Supabase
 - `MISTRAL_API_KEY` - Clé API Mistral
 - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` - OAuth Google
 - `ENCRYPTION_KEY` - Clé de chiffrement (32 caractères min) pour tokens OAuth
-- `APP_URL` - URL locale (ex: `http://localhost:3000`) — en prod Vercel utilise `VERCEL_URL` automatiquement
+
+Voir [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) pour le guide complet.
 
 ### Migrations
 
