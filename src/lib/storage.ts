@@ -6,6 +6,18 @@ const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const TARGET_SIZE = 200;
 
+async function ensureBucketExists(supabase: ReturnType<typeof createAdminClient>) {
+  const { data: buckets } = await supabase.storage.listBuckets();
+  if (buckets?.some((b) => b.id === BUCKET_NAME || b.name === BUCKET_NAME)) return;
+
+  const { error } = await supabase.storage.createBucket(BUCKET_NAME, {
+    public: true,
+    fileSizeLimit: MAX_SIZE,
+    allowedMimeTypes: ALLOWED_TYPES,
+  });
+  if (error) console.warn("Bucket avatars creation:", error.message);
+}
+
 export async function uploadProfilePicture(
   userId: string,
   file: ArrayBuffer,
@@ -20,6 +32,7 @@ export async function uploadProfilePicture(
   }
 
   const supabase = createAdminClient();
+  await ensureBucketExists(supabase);
 
   const resized = await sharp(Buffer.from(file))
     .resize(TARGET_SIZE, TARGET_SIZE, { fit: "cover" })

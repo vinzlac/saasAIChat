@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     const { email, first_name, last_name, password } = parsed.data;
     const supabase = await createClient();
 
-    const { error: authError } = await supabase.auth.signUp({
+    const { data, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -46,6 +46,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: authError.message },
         { status: 400 }
+      );
+    }
+
+    // Avec enable_confirmations=false (local sans SMTP), Supabase connecte directement
+    if (data.session) {
+      return NextResponse.json(
+        { message: "Inscription réussie.", session: true },
+        { status: 200 }
       );
     }
 

@@ -55,7 +55,8 @@ export function SignupForm() {
         return;
       }
 
-      router.push("/verify-email");
+      // Si session retournée (enable_confirmations=false), aller direct à l'app
+      router.push(data.session ? "/app" : "/verify-email");
       router.refresh();
     } catch {
       setError({ _form: ["Erreur lors de l'inscription"] });

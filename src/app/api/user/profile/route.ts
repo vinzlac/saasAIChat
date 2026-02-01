@@ -12,6 +12,21 @@ const updateProfileSchema = z.object({
 
 export const dynamic = "force-dynamic";
 
+function getProfileFromUser(user: { id: string; user_metadata?: Record<string, unknown> }) {
+  const meta = user.user_metadata ?? {};
+  const firstName =
+    (meta.first_name as string) ??
+    (meta.given_name as string) ??
+    (typeof meta.full_name === "string" ? meta.full_name.split(" ")[0] ?? "" : "") ??
+    "";
+  const lastName =
+    (meta.last_name as string) ??
+    (meta.family_name as string) ??
+    (typeof meta.full_name === "string" ? meta.full_name.split(" ").slice(1).join(" ") ?? "" : "") ??
+    "";
+  return { firstName: firstName.trim() || "Utilisateur", lastName: lastName.trim() || "" };
+}
+
 export async function GET() {
   try {
     const supabase = await createClient();
@@ -21,11 +36,25 @@ export async function GET() {
       return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
     }
 
-    const [profile] = await db
+    let [profile] = await db
       .select()
       .from(profiles)
       .where(eq(profiles.userId, user.id))
       .limit(1);
+
+    // Fallback : créer le profil si absent (trigger non exécuté ou OAuth)
+    if (!profile) {
+      const { firstName, lastName } = getProfileFromUser(user);
+      const [created] = await db
+        .insert(profiles)
+        .values({
+          userId: user.id,
+          firstName,
+          lastName,
+        })
+        .returning();
+      profile = created ?? undefined;
+    }
 
     if (!profile) {
       return NextResponse.json({ error: "Profil non trouvé" }, { status: 404 });

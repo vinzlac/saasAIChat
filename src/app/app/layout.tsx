@@ -17,11 +17,35 @@ export default async function AppLayout({
   if (!user) redirect("/login");
   if (!user.email_confirmed_at) redirect("/verify-email");
 
-  const [profile] = await db
+  let [profile] = await db
     .select()
     .from(profiles)
     .where(eq(profiles.userId, user.id))
     .limit(1);
+
+  // Fallback : créer le profil si absent (trigger non exécuté ou OAuth)
+  if (!profile) {
+    const meta = user.user_metadata ?? {};
+    const firstName =
+      (meta.first_name as string) ??
+      (meta.given_name as string) ??
+      (typeof meta.full_name === "string" ? meta.full_name.split(" ")[0] ?? "" : "") ??
+      "Utilisateur";
+    const lastName =
+      (meta.last_name as string) ??
+      (meta.family_name as string) ??
+      (typeof meta.full_name === "string" ? meta.full_name.split(" ").slice(1).join(" ") ?? "" : "") ??
+      "";
+    const [created] = await db
+      .insert(profiles)
+      .values({
+        userId: user.id,
+        firstName: String(firstName).trim() || "Utilisateur",
+        lastName: String(lastName).trim() || "",
+      })
+      .returning();
+    profile = created ?? undefined;
+  }
 
   const userData = {
     email: user.email ?? "",
