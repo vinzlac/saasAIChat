@@ -137,6 +137,7 @@ function main() {
   }
 
   envVars.APP_URL = envVars.APP_URL || "http://localhost:3000";
+  envVars.NEXT_PUBLIC_APP_URL = envVars.NEXT_PUBLIC_APP_URL ?? envVars.APP_URL;
 
   const placeholderEncryption = /^your-32-character|^your-.*-key$/i;
   if (existsSync(ENV_LOCAL)) {
@@ -156,13 +157,17 @@ function main() {
   const exampleVars = parseEnvFile(readFileSync(ENV_EXAMPLE, "utf-8"));
   const merged: Record<string, string> = { ...exampleVars, ...envVars };
 
+  // NEXT_PUBLIC_* requis pour OAuth côté client (PKCE code verifier dans cookies)
+  envVars.NEXT_PUBLIC_SUPABASE_URL = envVars.NEXT_PUBLIC_SUPABASE_URL ?? envVars.SUPABASE_URL;
+  envVars.NEXT_PUBLIC_SUPABASE_ANON_KEY = envVars.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? envVars.SUPABASE_ANON_KEY;
+
   const sections = [
     { comment: "# Database", keys: ["DATABASE_URL"] },
-    { comment: "# Supabase (local - no NEXT_PUBLIC_* variables)", keys: ["SUPABASE_URL", "SUPABASE_ANON_KEY", "SUPABASE_SERVICE_ROLE_KEY"] },
+    { comment: "# Supabase", keys: ["SUPABASE_URL", "SUPABASE_ANON_KEY", "SUPABASE_SERVICE_ROLE_KEY", "NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"] },
     { comment: "# Mistral", keys: ["MISTRAL_API_KEY"] },
     { comment: "# Google OAuth", keys: ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"] },
     { comment: "# Encryption (minimum 32 characters for AES-256)", keys: ["ENCRYPTION_KEY"] },
-    { comment: "# App URL (local uniquement - en prod Vercel utilise VERCEL_URL)", keys: ["APP_URL"] },
+    { comment: "# App URL (local - utiliser localhost partout pour cohérence OAuth)", keys: ["APP_URL", "NEXT_PUBLIC_APP_URL"] },
   ];
 
   const lines: string[] = [];

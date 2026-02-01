@@ -54,7 +54,9 @@ Le script `setup:local` démarre Supabase (Docker requis), extrait les clés via
 - `MISTRAL_API_KEY` : [console.mistral.ai](https://console.mistral.ai/) (requis pour le chat)
 - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` : Google Cloud Console (optionnel, pour Google Calendar et login social Google)
 
-**Configuration sans console Supabase** : tout se fait via `supabase/config.toml` et `.env.local`. Le login Google est déjà configuré dans `config.toml` ; il suffit d’ajouter vos credentials Google dans `.env.local`. Pensez à ajouter `http://127.0.0.1:54321/auth/v1/callback` dans les URI de redirection de votre projet Google Cloud.
+**Configuration sans console Supabase** : tout se fait via `supabase/config.toml` et `.env.local`. Le login Google est déjà configuré dans `config.toml` ; il suffit d’ajouter vos credentials Google dans `.env.local`. Dans Google Cloud Console, ajoutez les URI de redirection : `http://127.0.0.1:54321/auth/v1/callback` (Supabase Auth local), `https://<projet>.supabase.co/auth/v1/callback` (prod), et `https://votre-app.vercel.app/auth/callback` (callback OAuth).
+
+**Important** : En local, utilisez toujours la même URL (`http://localhost:3000` ou `http://127.0.0.1:3000`) pour éviter les problèmes de cookies OAuth entre les deux domaines.
 
 ## 🔐 Variables d'environnement
 

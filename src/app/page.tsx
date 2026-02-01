@@ -1,6 +1,18 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function HomePage() {
+type HomePageProps = {
+  searchParams?: { code?: string; next?: string };
+};
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const code = searchParams?.code;
+  const next = searchParams?.next ?? "/app";
+
+  if (code) {
+    redirect(`/auth/callback?code=${encodeURIComponent(code)}&next=${encodeURIComponent(next)}`);
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8">
       <h1 className="text-4xl font-bold mb-4">SaaS AI Chat</h1>
