@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run db:migrate:prod && next build",
+    "build": "npm run db:migrate:prod && npm run lint && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:migrate:prod": "tsx scripts/migrate-production.ts",
@@ -29,7 +29,7 @@
     "drizzle-orm": "^0.36.0",
     "googleapis": "^144.0.0",
     "lucide-react": "^0.454.0",
-    "next": "14.2.15",
+    "next": "14.2.35",
     "postgres": "^3.4.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -39,16 +39,23 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@eslint/compat": "^1.2.4",
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.17.0",
     "@types/node": "^22.9.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "drizzle-kit": "^0.28.0",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.15",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "14.2.35",
+    "eslint-plugin-react-hooks": "^5.0.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.21.0",
     "typescript": "^5.6.3"
+  },
+  "overrides": {
+    "eslint": "^9.17.0"
   }
 }
