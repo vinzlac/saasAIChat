@@ -22,14 +22,15 @@ npx supabase db push
 
 ## 3. Configurer Auth (Google OAuth) sur Supabase Cloud
 
-Le `config.toml` local ne s'applique **pas** au projet cloud. Configure Google OAuth dans le dashboard :
+Le `config.toml` local sert de **source de vérité** pour la config Cloud. Après avoir modifié `site_url` et `additional_redirect_urls` dans `supabase/config.toml`, pousse la config vers le projet lié :
 
-1. **Supabase Dashboard** → **Authentication** → **Providers** → **Google**
-2. Active le provider
-3. Saisis `GOOGLE_CLIENT_ID` et `GOOGLE_CLIENT_SECRET` (mêmes que en local)
-4. **Authentication** → **URL Configuration** :
-   - **Site URL** : `https://ton-app.vercel.app` (ou ton domaine)
-   - **Redirect URLs** : ajoute `https://ton-app.vercel.app/auth/callback`
+```bash
+npx supabase config push
+```
+
+(Requiert `supabase link` au préalable.)
+
+**Config manuelle** (si tu préfères) : Supabase Dashboard → **Authentication** → **Providers** → **Google** + **URL Configuration**.
 
 ## 4. Récupérer les variables Supabase
 
