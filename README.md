@@ -54,13 +54,39 @@ Le script `setup:local` démarre Supabase (Docker requis), extrait les clés via
 - `MISTRAL_API_KEY` : [console.mistral.ai](https://console.mistral.ai/) (requis pour le chat)
 - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` : Google Cloud Console (optionnel, pour Google Calendar et login social Google)
 
-**Configuration sans console Supabase** : tout se fait via `supabase/config.toml` et `.env.local`. Le login Google est déjà configuré dans `config.toml` ; il suffit d’ajouter vos credentials Google dans `.env.local`. Dans Google Cloud Console, ajoutez les URI de redirection : `http://127.0.0.1:54321/auth/v1/callback` (Supabase Auth local), `https://<projet>.supabase.co/auth/v1/callback` (prod), et `https://votre-app.vercel.app/auth/callback` (callback OAuth).
 
 **Important** : En local, utilisez toujours la même URL (`http://localhost:3000` ou `http://127.0.0.1:3000`) pour éviter les problèmes de cookies OAuth entre les deux domaines.
+
+## 🔧 Commandes Supabase (local + Cloud)
+
+### Local (développement)
+
+| Commande | Description |
+|----------|-------------|
+| `npm run setup:local` | Démarre Supabase, remplit `.env.local`, applique les migrations |
+| `npm run supabase:start` | Démarre Supabase local (Docker requis) |
+| `npm run supabase:stop` | Arrête Supabase local |
+| `npx supabase status -o env` | Affiche les variables d'environnement locales |
+
+### Cloud (production)
+
+| Commande | Description |
+|----------|-------------|
+| `npx supabase login` | Connexion au compte Supabase (token stocké localement) |
+| `npx supabase link --project-ref <REF>` | Lie le projet local au projet Cloud |
+| `npx supabase db push` | Pousse les migrations Supabase vers le Cloud (schéma, triggers, storage, RLS) |
+| `npx supabase config push` | Pousse `config.toml` vers le Cloud (site_url, redirect URLs, etc.) |
+| `npx supabase projects list` | Liste les projets Supabase accessibles |
+
+**Workflow Cloud** : après modification de `supabase/config.toml` (ex. `site_url`, `additional_redirect_urls`), exécuter `npx supabase config push` pour synchroniser le projet lié. Voir [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) et [docs/adr/0001-oauth-supabase-architecture.md](docs/adr/0001-oauth-supabase-architecture.md).
+
+**Google Cloud Console** : ajouter les URI de redirection : `http://127.0.0.1:54321/auth/v1/callback` (local), `https://<projet>.supabase.co/auth/v1/callback` (prod), `https://votre-app.vercel.app/auth/callback` (callback OAuth).
 
 ## 🔐 Variables d'environnement
 
 Le fichier `.env.local` est créé/mis à jour par `npm run setup:local`. Variables principales :
+
+### Local (développement)
 
 ```env
 # Database (auto-rempli par setup:local)
@@ -70,6 +96,8 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:54322/postgres
 SUPABASE_URL=http://localhost:54321
 SUPABASE_ANON_KEY=<from supabase status>
 SUPABASE_SERVICE_ROLE_KEY=<from supabase status>
+NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<from supabase status>
 
 # Mistral (manuel - https://console.mistral.ai/)
 MISTRAL_API_KEY=<your-mistral-api-key>
@@ -81,6 +109,22 @@ GOOGLE_CLIENT_SECRET=<your-google-client-secret>
 # Encryption (auto-généré par setup:local)
 ENCRYPTION_KEY=<32-character-encryption-key>
 ```
+
+### Production (Vercel)
+
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | URL pooler Supabase (port 6543) — **requis** pour le runtime |
+| `SUPABASE_URL` | `https://[PROJECT_REF].supabase.co` |
+| `SUPABASE_ANON_KEY` | Clé anon Supabase |
+| `SUPABASE_SERVICE_ROLE_KEY` | Clé service_role Supabase |
+| `NEXT_PUBLIC_SUPABASE_URL` | Même que SUPABASE_URL (requis pour OAuth client) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Même que SUPABASE_ANON_KEY |
+| `MISTRAL_API_KEY` | Clé API Mistral |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | OAuth Google |
+| `ENCRYPTION_KEY` | 32+ caractères aléatoires |
+
+**Supabase Cloud** : `SUPABASE_ACCESS_TOKEN` (token personnel du Dashboard) pour `supabase link` et `supabase config push`. Stocké dans `~/.supabase/access-token` après `supabase login`.
 
 ## 🏗️ Architecture
 
@@ -445,6 +489,8 @@ npm run build
 ## 📚 Documentation
 
 - [PRD.md](./PRD.md) - Product Requirements Document complet
+- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) - Guide de déploiement Vercel + Supabase Cloud
+- [docs/adr/0001-oauth-supabase-architecture.md](docs/adr/0001-oauth-supabase-architecture.md) - ADR Architecture OAuth et Supabase
 - [.cursor/rules/](./.cursor/rules/) - Règles de développement Cursor
 
 ## 🤝 Contribution
