@@ -1,3 +1,5 @@
+import { getAppUrl } from "@/lib/env";
+
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
@@ -6,7 +8,7 @@ const REDIRECT_URI = "/api/oauth/google/callback";
 export function getAuthorizeUrl(state: string): string {
   const params = new URLSearchParams({
     client_id: process.env.GOOGLE_CLIENT_ID!,
-    redirect_uri: `${process.env.APP_URL || "http://localhost:3000"}${REDIRECT_URI}`,
+    redirect_uri: `${getAppUrl()}${REDIRECT_URI}`,
     response_type: "code",
     scope: SCOPES.join(" "),
     state,
@@ -31,7 +33,7 @@ export async function exchangeCodeForTokens(
       client_secret: process.env.GOOGLE_CLIENT_SECRET!,
       code,
       grant_type: "authorization_code",
-      redirect_uri: `${process.env.APP_URL || "http://localhost:3000"}${REDIRECT_URI}`,
+      redirect_uri: `${getAppUrl()}${REDIRECT_URI}`,
     }),
   });
 

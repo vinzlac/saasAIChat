@@ -377,7 +377,7 @@ saasAIChat/
 - `MISTRAL_API_KEY` - Clé API Mistral
 - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` - OAuth Google
 - `ENCRYPTION_KEY` - Clé de chiffrement (32 caractères min) pour tokens OAuth
-- `APP_URL` - URL publique de l'app (ex: `https://votre-app.vercel.app`) pour redirections OAuth et emails
+- `APP_URL` - URL locale (ex: `http://localhost:3000`) — en prod Vercel utilise `VERCEL_URL` automatiquement
 
 ### Migrations
 

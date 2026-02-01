@@ -162,7 +162,7 @@ function main() {
     { comment: "# Mistral", keys: ["MISTRAL_API_KEY"] },
     { comment: "# Google OAuth", keys: ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"] },
     { comment: "# Encryption (minimum 32 characters for AES-256)", keys: ["ENCRYPTION_KEY"] },
-    { comment: "# App URL (for OAuth redirects - server-side only)", keys: ["APP_URL"] },
+    { comment: "# App URL (local uniquement - en prod Vercel utilise VERCEL_URL)", keys: ["APP_URL"] },
   ];
 
   const lines: string[] = [];

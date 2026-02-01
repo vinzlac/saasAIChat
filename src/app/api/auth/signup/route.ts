@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getAppUrl } from "@/lib/env";
 import { z } from "zod";
 
 const signupSchema = z.object({
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.APP_URL || "http://localhost:3000"}/auth/confirm`,
+        emailRedirectTo: `${getAppUrl()}/auth/confirm`,
         data: { first_name, last_name },
       },
     });

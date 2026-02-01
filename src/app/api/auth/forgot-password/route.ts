@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getAppUrl } from "@/lib/env";
 import { z } from "zod";
 
 const schema = z.object({
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${process.env.APP_URL || "http://localhost:3000"}/auth/confirm`,
+      redirectTo: `${getAppUrl()}/auth/confirm`,
     });
 
     if (error) {

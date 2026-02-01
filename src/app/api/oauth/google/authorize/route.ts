@@ -13,7 +13,6 @@ export async function GET(request: NextRequest) {
     }
 
     const state = randomBytes(32).toString("hex");
-    const redirectUri = `${process.env.APP_URL || "http://localhost:3000"}/api/oauth/google/callback`;
 
     const { cookies } = await import("next/headers");
     const cookieStore = await cookies();
