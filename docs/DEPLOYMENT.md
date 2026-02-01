@@ -57,9 +57,11 @@ Dans **APIs & Services** → **Credentials** → ton client OAuth :
 
 Dans **Vercel** → **Project** → **Settings** → **Environment Variables** :
 
+> **Important** : `POSTGRES_URL` (fourni par l'intégration Supabase) peut ne pas être disponible au **runtime** sur Vercel. Ajoute **`DATABASE_URL`** explicitement avec la même valeur que `POSTGRES_URL` (clique sur l'œil pour révéler, puis copie).
+
 | Variable | Valeur | Environnement |
 |----------|--------|---------------|
-| `DATABASE_URL` | URL pooler Supabase (port 6543) | Production |
+| `DATABASE_URL` | URL pooler Supabase (port 6543) — **requis** pour le runtime | Production |
 | `SUPABASE_URL` | `https://[PROJECT_REF].supabase.co` | Production |
 | `SUPABASE_ANON_KEY` | Clé anon Supabase | Production |
 | `SUPABASE_SERVICE_ROLE_KEY` | Clé service_role Supabase | Production |
